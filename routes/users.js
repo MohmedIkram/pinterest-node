@@ -104,15 +104,15 @@ router.route("/login").post(async (request, respone) => {
 
 // Creating user SiginUp route
 router.route("/signup").post(async (request, respone) => {
-  const { email, age, password } = request.body;
+  const { name, email, password } = request.body;
   try {
     const salt = await bcrypt.genSalt(10);
     const passwordHash = await bcrypt.hash(password, salt);
     console.log(passwordHash);
 
     const user = new Users({
+      name,
       email,
-      age,
       password: passwordHash,
     });
 
