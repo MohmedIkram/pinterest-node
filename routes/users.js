@@ -85,16 +85,11 @@ router.route("/login").post(async (request, respone) => {
       respone.send({ message: "Invalid credentials!!!" });
     } else {
       const token = jwt.sign({ id: user._id }, "secretkey");
-      respone.cookie("jwtoken", token, {
-        expires: new Date(Date.now() + 25892000000),
-        httpOnly: true,
-      });
       respone.send({
         ...user.toObject(),
         token,
         message: "Successful login",
       });
-      response.redirect(`${process.env.url}/users/home`);
     }
   } catch (err) {
     respone.status(500);
@@ -119,7 +114,6 @@ router.route("/signup").post(async (request, respone) => {
     await user.save();
     // db to store it
     respone.send(user);
-    response.redirect(`${process.env.url}/users/login`);
   } catch (err) {
     respone.status(500);
     respone.send(err);

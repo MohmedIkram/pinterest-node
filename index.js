@@ -4,7 +4,7 @@ import express from "express";
 import mongoose from "mongoose";
 import { userRouter } from "./routes/users.js";
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 6000;
 
 const url = `mongodb+srv://ikram:${process.env.MongoPassword}@cluster0.rlfdm.mongodb.net/Pinterest`;
 // ||
