@@ -4,9 +4,8 @@ const userSchema = new mongoose.Schema({
   avatar: {
     type: String,
   },
-  name: {
+  age: {
     type: String,
-    required: true,
   },
   email: {
     type: String,
