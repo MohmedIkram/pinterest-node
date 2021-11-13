@@ -5,11 +5,13 @@ import { auth as nice } from "../middleware/auth.js";
 import { Users } from "../models/users.js";
 import nodemailer from "nodemailer";
 import crypto from "crypto";
+import { OAuth2Client } from "google-auth-library";
 import dotenv from "dotenv";
 dotenv.config();
 
 const router = express.Router();
 
+const client = new OAuth2Client("658819066422-u41lavla958a2of0839c1ba5ce85oara.apps.googleusercontent.com")
 // nodemailer
 let transporter = nodemailer.createTransport({
   service: "gmail",
@@ -196,7 +198,39 @@ router.route("/reset-password/:resetToken").post(async (request, response) => {
 
 //User Logout
 router.route("/signout").get(async (request, respone) => {
-  response.status(200).send("Logged out successfully");
+  respone.status(200).send("Logged out successfully");
+});
+
+
+// Creating user GoogleLogin route
+router.route("/GoogleLogin").post(async (request, respone) => {
+  // const tokenID = request.body;
+  // console.log(tokenID)
+  // client.verifyIdToken({ tokenID, audience: "658819066422-u41lavla958a2of0839c1ba5ce85oara.apps.googleusercontent.com" })
+  //   .then(respone => {
+  //     const { email, name } = respone.payload
+  //     console.log(respone.payload)
+  //   })
+  const { email, name } = request.body;
+  try {
+    // const salt = await bcrypt.genSalt(10);
+    // const passwordHash = await bcrypt.hash(password, salt);
+    // console.log(passwordHash);
+
+    const user = new Users({
+      name,
+      email,
+      // password: passwordHash,
+    });
+
+    await user.save();
+    respone.status(200)
+    // db to store it
+    respone.send(user);
+  } catch (err) {
+    respone.status(500);
+    respone.send(err);
+  }
 });
 
 export const userRouter = router;

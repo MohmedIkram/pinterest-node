@@ -7,10 +7,9 @@ const app = express();
 const PORT = process.env.PORT || 6000;
 
 const url = `mongodb+srv://ikram:${process.env.MongoPassword}@cluster0.rlfdm.mongodb.net/Pinterest`;
-// ||
-// "mongodb://localhost/Pinterest";
+//  || "mongodb://localhost/Pinterest";
 
-mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true });
 const con = mongoose.connection;
 con.on("open", () => console.log("MongoDB is connected"));
 
