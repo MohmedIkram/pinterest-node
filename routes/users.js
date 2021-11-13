@@ -224,7 +224,7 @@ router.route("/GoogleLogin").post(async (request, respone) => {
     });
 
     await user.save();
-    respone.status(200)
+
     // db to store it
     respone.send(user);
   } catch (err) {
