@@ -211,7 +211,7 @@ router.route("/GoogleLogin").post(async (request, respone) => {
   //     const { email, name } = respone.payload
   //     console.log(respone.payload)
   //   })
-  const { email, name } = request.body;
+  const { email, name, password } = request.body;
   try {
     // const salt = await bcrypt.genSalt(10);
     // const passwordHash = await bcrypt.hash(password, salt);
@@ -220,7 +220,7 @@ router.route("/GoogleLogin").post(async (request, respone) => {
     const user = new Users({
       name,
       email,
-      // password: passwordHash,
+      password,
     });
 
     await user.save();
