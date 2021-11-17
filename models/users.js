@@ -21,12 +21,22 @@ const userSchema = new mongoose.Schema(
       unique: true,
       required: true,
     },
-    createdAt: {
-      type: String,
-    },
     password: {
       type: String,
-      required: true,
+      required: false,
+    },
+    googleId: {
+      required: false,
+      type: String,
+      unique: true,
+      sparse: true,
+
+    },
+    facebookId: {
+      required: false,
+      type: String,
+      unique: true,
+      sparse: true,
     },
 
     resetLink: {

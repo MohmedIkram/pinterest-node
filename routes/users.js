@@ -204,23 +204,13 @@ router.route("/signout").get(async (request, respone) => {
 
 // Creating user GoogleLogin route
 router.route("/GoogleLogin").post(async (request, respone) => {
-  // const tokenID = request.body;
-  // console.log(tokenID)
-  // client.verifyIdToken({ tokenID, audience: "658819066422-u41lavla958a2of0839c1ba5ce85oara.apps.googleusercontent.com" })
-  //   .then(respone => {
-  //     const { email, name } = respone.payload
-  //     console.log(respone.payload)
-  //   })
-  const { email, name, password } = request.body;
-  try {
-    // const salt = await bcrypt.genSalt(10);
-    // const passwordHash = await bcrypt.hash(password, salt);
-    // console.log(passwordHash);
 
+  const { email, name, googleId } = request.body;
+  try {
     const user = new Users({
       name,
       email,
-      password,
+      googleId,
     });
 
     await user.save();
