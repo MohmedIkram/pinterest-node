@@ -16,8 +16,8 @@ con.on("open", () => console.log("MongoDB is connected"));
 app.use(express.json());
 app.use(cors());
 
-app.get("/", (request, respone) => {
-  respone.send("Welcome to Pinterest app!!!!");
+app.get("/", (request, response) => {
+  response.send("Welcome to Pinterest app!!!!");
 });
 
 app.use("/users", userRouter);

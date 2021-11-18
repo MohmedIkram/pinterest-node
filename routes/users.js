@@ -22,39 +22,39 @@ let transporter = nodemailer.createTransport({
 });
 
 // get all the users present
-router.route("/").get(async (request, respone) => {
+router.route("/").get(async (request, response) => {
   const users = await Users.find();
-  respone.send(users);
+  response.send(users);
 });
 
 // find user by id
 router
   .route("/:id")
-  .get(nice, async (request, respone) => {
+  .get(nice, async (request, response) => {
     const { id } = request.params;
     const user = await Users.findById(id);
-    respone.send(user);
+    response.send(user);
   })
   // delete particular user by id
-  .delete(async (request, respone) => {
+  .delete(async (request, response) => {
     const { id } = request.params;
     try {
       const user = await Users.findById(id);
       await user.remove();
 
-      respone.send({
+      response.send({
         name: user.name,
         id: user.id,
         message: "Deleted successfully",
       });
     } catch (err) {
-      respone.status(500);
-      respone.send("User is missing");
+      response.status(500);
+      response.send("User is missing");
     }
   })
 
   // upadte the details of user
-  .patch(async (request, respone) => {
+  .patch(async (request, response) => {
     const { id } = request.params;
     const { name, email } = request.body;
 
@@ -67,35 +67,35 @@ router
         user.email = email;
       }
       await user.save();
-      respone.send(user);
+      response.send(user);
     } catch (err) {
-      respone.status(500);
-      respone.send(err);
+      response.status(500);
+      response.send(err);
     }
   });
 
 // login route
 
-router.route("/login").post(async (request, respone) => {
+router.route("/login").post(async (request, response) => {
   const { email, password } = request.body;
   try {
     const user = await Users.findOne({ email });
     const inDbStoredPassword = user.password;
     const isMatch = await bcrypt.compare(password, inDbStoredPassword);
     if (!isMatch) {
-      respone.status(500);
-      respone.send({ message: "Invalid credentials!!!" });
+      response.status(500);
+      response.send({ message: "Invalid credentials!!!" });
     } else {
       const token = jwt.sign({ id: user._id }, "secretkey");
-      respone.send({
+      response.send({
         ...user.toObject(),
         token,
         message: "Successful login",
       });
     }
   } catch (err) {
-    respone.status(500);
-    respone.send(err);
+    response.status(500);
+    response.send(err);
   }
 });
 
@@ -109,8 +109,8 @@ router.route("/signup").post(async (request, respone) => {
 
     const user = new Users({
       name,
-      email,
       password: passwordHash,
+      email
     });
 
     await user.save();
@@ -197,29 +197,35 @@ router.route("/reset-password/:resetToken").post(async (request, response) => {
 });
 
 //User Logout
-router.route("/signout").get(async (request, respone) => {
-  respone.status(200).send("Logged out successfully");
+router.route("/signout").get(async (request, response) => {
+  response.status(200).send("Logged out successfully");
 });
 
 
 // Creating user GoogleLogin route
-router.route("/GoogleLogin").post(async (request, respone) => {
+router.route("/GoogleLogin").post(async (request, response) => {
 
   const { email, name, googleId } = request.body;
   try {
-    const user = new Users({
-      name,
-      email,
-      googleId,
-    });
-    respone.status(200).send("Logged in successfully");
-    await user.save();
+    const inDbStoredgoogleId = await Users.findOne({ googleId });
+    if (!inDbStoredgoogleId) {
 
-    // db to store it
-    respone.send(user);
+      const user = new Users({
+        name,
+        email,
+        googleId,
+      });
+      response.status(200).send("Account Created Succesfully");
+      await user.save();
+      response.redirect(`http://localhost:3000/home`);
+      // db to store it
+      response.send(user);
+    } else {
+      response.redirect(`http://localhost:3000/home`);
+    }
   } catch (err) {
-    respone.status(500);
-    respone.send(err);
+    response.status(500);
+    response.send(err);
   }
 });
 
