@@ -212,7 +212,7 @@ router.route("/GoogleLogin").post(async (request, respone) => {
       email,
       googleId,
     });
-
+    respone.status(200).send("Logged in successfully");
     await user.save();
 
     // db to store it
